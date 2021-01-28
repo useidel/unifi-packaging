@@ -1,0 +1,33 @@
+Download Unifi.unix.zip
+
+Rename for Fedora and Pack in tar.gz (with the Makefile) for Debian und Co.
+
+For Fedora:
+MYVER=6.0.45
+mv Unifi.unix.zip Unifi-$MYVER.unix.zip
+
+# adapt unifi.spec (version and changelog)
+
+For Debian and Co.
+
+MYVER=6.0.45
+mkdir -p build/unifi-$MYVER
+mv Unifi.unix.zip build/unifi-$MYVER
+cp debian/Makefile build/unifi-$MYVER
+cd build
+tar cfz unif-$MYVER.tar.gz unifi-$MYVER
+cd unifi-$MYVER
+dh_make -f ../unif-$MYVER.tar.gz
+
+# s, Y, y
+
+rm -f debian/*ex debian/*EX
+
+# copy files over from my debian prep to debian
+# adapt changelog
+
+dpkg-buildpackage -S -us -uc
+
+
+
+
