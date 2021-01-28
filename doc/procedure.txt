@@ -1,19 +1,22 @@
-Download Unifi.unix.zip
+Download UniFi.unix.zip
 
 Rename for Fedora and Pack in tar.gz (with the Makefile) for Debian und Co.
 
 For Fedora:
-MYVER=6.0.45
-mv Unifi.unix.zip Unifi-$MYVER.unix.zip
+export MYVER=6.0.45
+mv UniFi.unix.zip UniFi-$MYVER.unix.zip
 
 # adapt unifi.spec (version and changelog)
 
 For Debian and Co.
 
-MYVER=6.0.45
+export DEBFULLNAME="Udo Seidel"
+export DEBEMAIL="udoseidel@gmx.de"
+export MYVER=6.0.45
+
 mkdir -p build/unifi-$MYVER
-mv Unifi.unix.zip build/unifi-$MYVER
-cp debian/Makefile build/unifi-$MYVER
+cp UniFi.unix.zip build/unifi-$MYVER
+cp Makefile build/unifi-$MYVER
 cd build
 tar cfz unif-$MYVER.tar.gz unifi-$MYVER
 cd unifi-$MYVER
