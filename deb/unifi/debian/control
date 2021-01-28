@@ -1,0 +1,23 @@
+Source: unifi
+Section: java
+Priority: optional
+Maintainer: Udo Seidel <udoseidel@gmx.de>
+Standards-Version: 4.1.5
+Homepage: http://www.ubnt.com/unifi
+
+Package: unifi
+Architecture: all
+Depends: binutils, coreutils, adduser, libcap2, curl,
+ mongodb-server (>= 2.4.10) | mongodb-10gen (>= 2.4.14) | mongodb-org-server (>= 2.6.0),
+ mongodb-server (<< 1:4.0.0) | mongodb-10gen (<< 4.0.0) | mongodb-org-server (<< 4.0.0),
+ java8-runtime-headless, jsvc (>=1.0.8), logrotate
+Pre-Depends: debconf (>= 0.5) | debconf-2.0
+Conflicts: unifi-controller
+Provides: unifi-controller
+Replaces: unifi-controller
+Description: Ubiquiti UniFi server
+ Ubiquiti UniFi server is a centralized management system for UniFi suite of devices.
+ After the UniFi server is installed, the UniFi controller can be accessed on any
+ web browser. The UniFi controller allows the operator to instantly provision thousands
+ of UniFi devices, map out network topology, quickly manage system traffic, and further
+ provision individual UniFi devices.

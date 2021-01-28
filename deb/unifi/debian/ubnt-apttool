@@ -1,0 +1,322 @@
+#!/bin/sh
+# Ubiquiti APT tools                -*- shell-script -*-
+# Copyright (c) 2012-2015 Ubiquiti Networks, Inc. http://www.ubnt.com
+# vim: ft=sh
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+BASEDIR=$(dirname $0)
+PATH=${PATH}:${BASEDIR}
+
+usage() {
+	echo "Ubiquiti APT tools, v1.0"
+	echo "Usage: $0 <command> [<arguments>]"
+	echo "  supported commands:"
+	echo "     chkpkgupdate <pkgname>"
+	echo "     dlpkgupdate <pkgname>"
+	echo "     getpkgupdatestatus <pkgname>"
+	echo "     installpkgupdate <pkgname>"
+	echo "     showpkgver <pkgname>"
+	echo "     updatepkg <pkgname>"
+
+	exit 1
+}
+
+# prints error message and exits the process with the given error code
+# args: <exit code> <message>
+err() {
+	local rc msg
+	rc=$1
+	shift
+	msg=$*
+	printf "ERROR: ${msg}\n"
+	exit ${rc}
+}
+
+copy_file() {
+	if [ -f "$1" -a -f "$2" ]; then
+		cp -f $1 $2
+	else
+		return 1
+	fi
+}
+
+lock() {
+	local lockfile rc
+	lockfile=$1
+	dotlockfile -l -p -r 0 ${LOCKFILE}
+	rc=$?
+	return ${rc}
+}
+
+lock_or_error() {
+	local lockfile msg rc
+	lockfile=$1
+	shift
+	msg=$*
+	lock ${lockfile}
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		err ${msg}
+	fi
+}
+
+unlock() {
+	local lockfile
+	lockfile=$1
+	dotlockfile -u ${lockfile}
+}
+
+unlock_and_err() {
+	local lockfile
+	lockfile=$1
+	unlock ${lockfile}
+	shift
+	err $*
+}
+
+set_status() {
+	local statusfile status
+	statusfile=$1
+	shift
+	status=$*
+	echo ${status} > ${statusfile}
+}
+
+do_chkpkgupdate() {
+	local pkgname rc installed_ver candidate_ver LOCKFILE
+	if [ -z "${1}" ]; then
+		err 2 "No package name!"
+	fi
+	pkgname=${1}
+	if [ ! -s /etc/apt/sources.list.d/ubnt-${pkgname}.list ]; then
+		err 3 "No APT source file!"
+	fi
+
+	LOCKFILE="/var/run/ubnt-apttool.${pkgname}.pid"
+	lock_or_error ${LOCKFILE} 1 "cannot aquire lock file (${LOCKFILE}) !"
+
+	local PID=$$
+	STATUSFILE="/var/run/ubnt-apttool.${pkgname}.status.${PID}"
+	set_status ${STATUSFILE} "sourcing"
+	apt-get update -o Dir::Etc::sourcelist=sources.list.d/ubnt-${pkgname}.list -o Dir::Etc::sourceparts="-" -o APT::Get:List-Cleanup="0" >/dev/null 2>&1
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 4 "apt-get update failed!"
+	fi
+
+	installed_ver=$(apt-cache policy ${pkgname} | awk '/Installed:/{print $2}')
+	candidate_ver=$(apt-cache policy ${pkgname} | awk '/Candidate:/{print $2}')
+
+	if [ "${installed_ver}" != "${candidate_ver}" ]; then
+		set_status ${STATUSFILE} "completed"
+		echo "${candidate_ver}"
+	else
+		set_status ${STATUSFILE} "unneeded"
+	fi
+
+	unlock ${LOCKFILE}
+	return 0
+}
+
+do_dlpkgupdate() {
+	local pkgname rc pkgfile
+	if [ -z "${1}" ]; then
+		err 2 "No package name!"
+	fi
+	pkgname=${1}
+	if [ ! -s /etc/apt/sources.list.d/ubnt-${pkgname}.list ]; then
+		err 3 "No APT source file!"
+	fi
+
+	LOCKFILE="/var/run/ubnt-apttool.${pkgname}.pid"
+	lock_or_error ${LOCKFILE} 1 "cannot aquire lock file (${LOCKFILE}) !"
+
+	local PID=$$
+	STATUSFILE="/var/run/ubnt-apttool.${pkgname}.status.${PID}"
+	set_status ${STATUSFILE} "sourcing"
+	apt-get update -o Dir::Etc::sourcelist=sources.list.d/ubnt-${pkgname}.list -o Dir::Etc::sourceparts="-" -o APT::Get:List-Cleanup="0" >/dev/null 2>&1
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 4 "apt-get update failed!"
+	fi
+
+	installed_ver=$(apt-cache policy ${pkgname} | awk '/Installed:/{print $2}')
+	candidate_ver=$(apt-cache policy ${pkgname} | awk '/Candidate:/{print $2}')
+
+	if [ "${installed_ver}" = "${candidate_ver}" ]; then
+		set_status ${STATUSFILE} "unneeded"
+		unlock ${LOCKFILE}
+		return 0
+	fi
+
+	set_status ${STATUSFILE} "downloading"
+	apt-get install -y -d ${pkgname} >/dev/null 2>&1
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 4 "apt-get install -y -d failed!"
+	fi
+
+	f=`basename $(apt-cache show ${pkgname} | awk '/Filename/{print $2}')`
+	pkgfile=/var/cache/apt/archives/${f}
+	md5sum=$(apt-cache show ${pkgname} | awk '/MD5sum/{print $2}')
+	if [ ! -s ${pkgfile} ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 5 "${pkgfile} download failed!"
+	fi
+
+	set_status ${STATUSFILE} "checking"
+	cal_md5sum=$(md5sum ${pkgfile} | awk '{print $1}')
+	if [ "${md5sum}" != "${cal_md5sum}" ]; then
+		rm -f ${pkgfile}
+		set_status ${STATUSFILE} "invalid"
+		unlock_and_err ${LOCKFILE} 6 "${pkgfile} md5sum check failed!"
+	fi
+
+	echo "${pkgfile}"
+	set_status ${STATUSFILE} "completed"
+	unlock ${LOCKFILE}
+	return 0
+}
+
+do_getpkgupdatestatus() {
+	local pkgname rc dpkgpid aptpid
+	if [ -z "${1}" ]; then
+		err 2 "No package name!"
+	fi
+
+	pkgname=${1}
+	LOCKFILE="/var/run/ubnt-apttool.${pkgname}.pid"
+	lock ${LOCKFILE}
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		PID=$(cat ${LOCKFILE})
+		STATUSFILE="/var/run/ubnt-apttool.${pkgname}.status.${PID}"
+		[ ! -f ${STATUSFILE} ] || cat ${STATUSFILE}
+		return 0
+	fi
+	unlock ${LOCKFILE}
+
+	#  not triggered by ubnt-apttool
+	aptpid=$(lsof -t /var/lib/apt/lists/lock 2>/dev/null)
+	dpkgpid=$(lsof -t /var/lib/dpkg/lock 2>/dev/null)
+
+	if [ "${aptpid}" != "" -o "${dpkgpid}" != "" ]; then
+		echo "others"
+		return 2
+	fi
+	echo "none"
+	return 1
+}
+
+do_installpkgupdate() {
+	local pkgname rc pkgfile
+	if [ -z "${1}" ]; then
+		err 2 "No package name!"
+	fi
+
+	pkgname=${1}
+	LOCKFILE="/var/run/ubnt-apttool.${pkgname}.pid"
+	lock_or_error ${LOCKFILE} 1 "cannot aquire lock file (${LOCKFILE}) !"
+
+	local PID=$$
+	STATUSFILE="/var/run/ubnt-apttool.${pkgname}.status.${PID}"
+	set_status ${STATUSFILE} "updating"
+	apt-get install -y --only-upgrade ${pkgname} >/dev/null 2>&1
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 4 "apt-get intstall ${pkgname} failed!"
+	fi
+	set_status "completed"
+	apt-get clean -y
+	unlock ${LOCKFILE}
+
+	return 0
+}
+
+do_showpkgver() {
+	local pkgname rc pkgfile
+	if [ -z "${1}" ]; then
+		err 2 "No package name!"
+	fi
+
+	pkgname=${1}
+	installed_ver=$(apt-cache policy ${pkgname} | awk '/Installed:/{print $2}')
+
+	echo "${installed_ver}"
+
+	return 0
+}
+
+do_updatepkg() {
+	local pkgname rc pkgfile
+	if [ -z "${1}" ]; then
+		err 2 "No package name!"
+	fi
+	pkgname=${1}
+	if [ ! -s /etc/apt/sources.list.d/ubnt-${pkgname}.list ]; then
+		err 3 "No APT source file!"
+	fi
+
+	LOCKFILE="/var/run/ubnt-apttool.${pkgname}.pid"
+	lock_or_error ${LOCKFILE} 1 "cannot aquire lock file (${LOCKFILE}) !"
+
+	local PID=$$
+	STATUSFILE="/var/run/ubnt-apttool.${pkgname}.status.${PID}"
+	set_status ${STATUSFILE} "sourcing"
+	apt-get update -o Dir::Etc::sourcelist=sources.list.d/ubnt-${pkgname}.list -o Dir::Etc::sourceparts="-" -o APT::Get:List-Cleanup="0" >/dev/null 2>&1
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 4 "apt-get update failed!"
+	fi
+
+	installed_ver=$(apt-cache policy ${pkgname} | awk '/Installed:/{print $2}')
+	candidate_ver=$(apt-cache policy ${pkgname} | awk '/Candidate:/{print $2}')
+
+	if [ "${installed_ver}" = "${candidate_ver}" ]; then
+		set_status ${STATUSFILE} "unneeded"
+		unlock ${LOCKFILE}
+		return 0
+	fi
+
+	apt-get update >/dev/null 2>&1
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 4 "apt-get update failed!"
+	fi
+
+	set_status ${STATUSFILE} "downloading"
+	apt-get install -y -d ${pkgname} >/dev/null 2>&1
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		set_status ${STATUSFILE} "failed"
+		unlock_and_err ${LOCKFILE} 4 "apt-get install -y -d failed!"
+	fi
+
+	(setsid ubnt-apttool installpkgupdate ${pkgname} >/dev/null 2>&1 &)
+
+	set_status ${STATUSFILE} "forked"
+	unlock ${LOCKFILE}
+	return 0
+}
+
+[ $# -lt 1 ] && usage
+
+CMD=$1
+
+case ${CMD} in
+	chkpkgupdate|dlpkgupdate|getpkgupdatestatus|installpkgupdate|showpkgver|updatepkg)
+		do_cmd="do_${CMD}"
+		shift
+		eval ${do_cmd} $@
+	;;
+	*)
+		usage
+	;;
+esac

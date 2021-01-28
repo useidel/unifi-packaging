@@ -1,0 +1,30 @@
+####################
+#### All systems ###
+####################
+
+Since MongoDB was removed from Fedora[1] it must be installed separately. The
+EL7 community package[1] from MongoDB works on Fedora as well.
+
+[1] https://fedoraproject.org/wiki/Changes/MongoDB_Removal
+[2] https://www.mongodb.com/download-center/community
+
+Enable the unifi service and the firewall config:
+
+# firewall-cmd --permanent --add-service=unifi 
+
+To permit Cloud Access:
+
+# firewall-cmd --permanent --add-service=unifi-cloud
+
+Then reload the configuration:
+
+# firewall-cmd --reload
+
+Enabling and starting the unifi service:
+
+# systemctl enable unifi.service
+# systemctl start unifi.service
+
+Afterwards you should be able to browse to the controller at:
+
+<host>:8443

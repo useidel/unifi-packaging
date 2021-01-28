@@ -1,0 +1,11 @@
+/usr/lib/unifi/logs/mongod.log {
+        rotate 5
+        size 50M
+        compress
+        missingok
+        sharedscripts
+        su unifi unifi
+        postrotate
+                test ! -r /usr/lib/unifi/run/mongod.pid || kill -USR1 $(cat /usr/lib/unifi/run/mongod.pid)
+        endscript
+}
