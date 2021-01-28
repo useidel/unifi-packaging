@@ -27,7 +27,7 @@ dh_make -f ../unif-$MYVER.tar.gz
 rm -f debian/*ex debian/*EX
 
 # copy files over from my debian prep to debian
-cp ../../debian/* debian/
+cp ../debian/* debian/
 # adapt changelog
 
 dpkg-buildpackage -S -us -uc
