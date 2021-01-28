@@ -20,14 +20,9 @@ cp Makefile build/unifi-$MYVER
 cd build
 tar cfz unif-$MYVER.tar.gz unifi-$MYVER
 cd unifi-$MYVER
-dh_make -f ../unif-$MYVER.tar.gz
-
-# s, Y, y
-
+dh_make -s -y -f ../unif-$MYVER.tar.gz
 rm -f debian/*ex debian/*EX
-
-# copy files over from my debian prep to debian
-cp ../debian/* debian/
+cp ../../debian/* debian/
 # adapt changelog
 
 dpkg-buildpackage -S -us -uc
