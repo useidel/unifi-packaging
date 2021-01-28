@@ -64,6 +64,7 @@ if [ "$1" = "configure" ] ; then
 
     chown -h ${UNIFI_USER}:${UNIFI_GROUP} ${DATADIR} ${LOGDIR} ${RUNDIR} && chown -RH ${UNIFI_USER}:${UNIFI_GROUP} ${DATADIR} ${LOGDIR} ${RUNDIR}
 
+    ln -sf ${CODEPATH}/bin/unifi.init /etc/init.d/unifi
     update-rc.d unifi defaults 92 08
     ln -sf $(which mongod) ${CODEPATH}/bin/mongod
 

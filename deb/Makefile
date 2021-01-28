@@ -15,7 +15,6 @@ install:
 	mkdir -p  $(MYROOT)/etc/pam.d/
 	mkdir -p  $(MYROOT)/lib/systemd/system/
 	cp debian/unifi.myinit $(MYDEST)/bin/unifi.init
-	ln -s $(MYDEST)/bin/unifi.init $(MYROOT)/etc/init.d/
 	cp debian/ubnt-apttool $(MYDEST)/bin
 	cp debian/unifi.logrotate $(MYROOT)/etc/logrotate.d/unifi
 	cp debian/unifi.pam.in $(MYROOT)/etc/pam.d/unifi
