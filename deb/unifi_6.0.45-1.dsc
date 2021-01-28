@@ -10,11 +10,11 @@ Build-Depends: debhelper (>= 10~), unzip
 Package-List:
  unifi deb java optional arch=all
 Checksums-Sha1:
- 3b1c55ac792b369bda6de0be55a2a03da33b59d7 145709880 unifi_6.0.45.orig.tar.gz
- 63bb1a2c7cc79e7bcfd8f2692a62f7221cfdf494 8140 unifi_6.0.45-1.debian.tar.xz
+ 67677703d47291e60ca08e69e58e2bbb22c429bd 145709998 unifi_6.0.45.orig.tar.gz
+ 6601d6627368de983278f4f30468681968468d2a 8160 unifi_6.0.45-1.debian.tar.xz
 Checksums-Sha256:
- 03166717139a96a5c545e2169e0bca384b268d348e1bbc52f7107d462785f122 145709880 unifi_6.0.45.orig.tar.gz
- 1f2e2cbd0df341c92656dcec093f4e6ff00b8eea7a9e6d36bdd163bce90e6ebe 8140 unifi_6.0.45-1.debian.tar.xz
+ 846a5982d7e71b4dec866ddf2e8a99140eaab75baa42a45e112b984b08e521ab 145709998 unifi_6.0.45.orig.tar.gz
+ 4e1f34fd561d794ff46e329b0ee65c6e11a9b3505de21369057342ba760b87e0 8160 unifi_6.0.45-1.debian.tar.xz
 Files:
- cb39b1e6846ceab94cb521453876e0d2 145709880 unifi_6.0.45.orig.tar.gz
- 97fd9e03d76aa6df5e0bbde693084001 8140 unifi_6.0.45-1.debian.tar.xz
+ d1fef211f2c969c8c9e895dc14e0974b 145709998 unifi_6.0.45.orig.tar.gz
+ 262e37c50b4149f4e3745772b2ec81ad 8160 unifi_6.0.45-1.debian.tar.xz
