@@ -2,9 +2,17 @@
 
 Download UniFi.unix.zip
 
-Rename for Fedora and Pack in tar.gz (with the Makefile) for Debian und Co.
+```
+export MYVER=6.0.45
+wget -nd https://dl.ui.com/unifi/$MYVER/UniFi.unix.zip
+```
+
 
 ## For Fedora:
+
+See also: https://rpm-packaging-guide.github.io/ and
+ https://www.redhat.com/sysadmin/create-rpm-package
+
 ```
 export MYVER=6.0.45
 mv UniFi.unix.zip UniFi-$MYVER.unix.zip
@@ -13,7 +21,7 @@ Now adapt `unifi.spec` (version and changelog)
 
 ## For Debian and Co.
 
-see also: https://www.debian.org/doc/manuals/maint-guide/
+See also: https://www.debian.org/doc/manuals/maint-guide/
 
 ```
 export DEBFULLNAME="Udo Seidel"
