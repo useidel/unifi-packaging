@@ -350,7 +350,7 @@ fi
 * Wed Jan 27 2021 Udo Seidel <udoseidel@gmx.de> - 6.0.45-1
 - Update to 6.0.45 see: https://community.ui.com/releases/UniFi-Network-Controller-6-0-45/8d3b98e1-b9d4-4ab3-b8da-721dbe9ab842
 
-* Thu Dec 22 2020 Udo Seidel <udoseidel@gmx.de> - 6.0.43-1
+* Tue Dec 22 2020 Udo Seidel <udoseidel@gmx.de> - 6.0.43-1
 - Update to 6.0.43 see: 
   https://community.ui.com/releases/UniFi-Network-Controller-6-0-43/b28bb453-927a-4dd8-82f7-40af28505510
 - removed SPEC file entry 'BuildRequires:  %{_bindir}/execstack' which caused problems on OBS
