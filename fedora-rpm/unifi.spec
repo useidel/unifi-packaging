@@ -4,7 +4,7 @@
 %global __strip /bin/true
 
 Name:           unifi
-Version:        6.0.45
+Version:        6.1.61
 Release:        1%{?dist}
 Summary:        Ubiquiti UniFi controller
 
@@ -347,6 +347,9 @@ fi
 
 
 %changelog
+* Thu Mar 04 2021 Udo Seidel <udoseidel@gmx.de> - 6.1.61
+- Update to 6.1.61 see: https://community.ui.com/releases/UniFi-Network-Controller-6-1-61/62f1ad38-1ac5-430c-94b0-becbb8f71d7d
+
 * Wed Jan 27 2021 Udo Seidel <udoseidel@gmx.de> - 6.0.45-1
 - Update to 6.0.45 see: https://community.ui.com/releases/UniFi-Network-Controller-6-0-45/8d3b98e1-b9d4-4ab3-b8da-721dbe9ab842
 
