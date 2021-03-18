@@ -1,3 +1,10 @@
+unifi (6.1.70-1) unstable; urgency=medium
+
+  * Update to new version
+  * See: https://community.ui.com/releases/UniFi-Network-Controller-6-1-70/f0607cc3-80dc-4019-87ad-02207b546417
+
+ -- Udo Seidel <udoseidel@gmx.de>  Tue, 18 Mar 2021 20:28:31 +0100
+
 unifi (6.1.67-1) unstable; urgency=medium
 
   * Update to new version
