@@ -348,7 +348,7 @@ fi
 
 %changelog
 * Wed Apr 14 2021 Udo Seidel <udoseidel@gmx.de> - 6.2.17
-- Update to 6.2.17 see: mv UniFi.unix.zip UniFi-$MYVER.unix.zip
+- Update to 6.2.17 see: https://community.ui.com/releases/UniFi-Network-Controller-6-2-17/7f6d58bc-ce9f-43f2-8bc8-0c0dd935ebce
 
 * Sun Mar 28 2021 Udo Seidel <udoseidel@gmx.de> - 6.1.71
 - Update to 6.1.71 see: https://community.ui.com/releases/UniFi-Network-Controller-6-1-71/0cffd3ed-7429-4529-9a20-9fead78ebf66
