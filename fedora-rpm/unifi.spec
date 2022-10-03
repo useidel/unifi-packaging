@@ -4,7 +4,7 @@
 %global __strip /bin/true
 
 Name:           unifi
-Version:        6.5.55
+Version:        7.2.94
 Release:        1%{?dist}
 Summary:        Ubiquiti UniFi controller
 
@@ -347,6 +347,9 @@ fi
 
 
 %changelog
+* Tue Oct 04 2022 Udo Seidel <udoseidel@gmx.de> - 7.2.94
+- Big jump to 7.2.94 see: https://community.ui.com/releases/UniFi-Network-Application-7-2-94/2ab774d1-0f24-422e-accc-53b8200c10a7
+
 * Thu Jan 06 2022 Udo Seidel <udoseidel@gmx.de> - 6.5.55
 - Update to 6.5.55 see: https://community.ui.com/releases/UniFi-Network-Application-6-5-55/48c64137-4a4a-41f7-b7e4-3bee505ae16e
 
