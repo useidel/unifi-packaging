@@ -39,7 +39,7 @@ jobs:
 
       # Build the SRPM package
       - name: Build the source RPM
-        run: rpmbuild -bs *.spec
+        run: cd fedora-rpm && rpmbuild -bs *.spec
 
       # setup COPR Authentication
       # You need to store your Copr authenication data under
