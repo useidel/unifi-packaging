@@ -1,7 +1,7 @@
 # This is workflow to build rpms using the SPEC file
 # The Copr build service is used
 
-name: rpmbuild_copr
+name: rpmbuild_copr_obs
 
 # Controls when the workflow will run
 on:
@@ -29,6 +29,8 @@ jobs:
       # That workspace (the directory) is different from the RPMBUILD space
       - uses: actions/checkout@v3
 
+      ##### We start with the Copr part 
+
       # Install rpm and copr tools
       - name: Install tooling for source RPM build
         run: dnf -y install @development-tools @rpm-development-tools copr-cli make
@@ -55,3 +57,24 @@ jobs:
       # The path is not the $GITHUB_WORKSPACE it is the RPMBUILD space
       - name: Submit the copr build
         run: copr-cli build --nowait unifi /github/home/rpmbuild/SRPMS/*.src.rpm
+
+      #### And we take care of the OBS part
+      
+      # Install osc tools
+      - name: Install tooling for openbuild service
+        run: dnf -y install osc wget
+
+      # setup OBS Authentication
+      # You need to store your OBS authenication data under
+      # Settings -> Actions -> Repository secrets
+      - name: Install API token for osb
+        env:
+          API_TOKEN_CONTENT: ${{ secrets.OBS_API_TOKEN }}
+        run: |
+           mkdir -p "$HOME/.config/osc"
+           echo "$API_TOKEN_CONTENT" > "$HOME/.config/osc/oscrc"
+
+      # prepare and trigger OBS package build
+      - name:  prepare and trigger OBS package build
+        run: ./submitobsbuild.sh
+
