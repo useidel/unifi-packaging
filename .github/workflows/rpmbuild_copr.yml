@@ -35,7 +35,7 @@ jobs:
 
       # Get/download the source files to the right place
       - name: Get the sources for RPM package
-        run: ./getsources.sh
+        run: ./getsources4RPM.sh
 
       # Build the SRPM package
       - name: Build the source RPM
