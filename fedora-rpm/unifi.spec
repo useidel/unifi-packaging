@@ -4,7 +4,7 @@
 %global __strip /bin/true
 
 Name:           unifi
-Version:        6.5.55
+Version:        7.2.94
 Release:        1%{?dist}
 Summary:        Ubiquiti UniFi controller
 
