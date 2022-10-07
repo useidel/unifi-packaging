@@ -1,6 +1,6 @@
 #!/usr/bin/bash -x
 
-PATH=/usr/bin:/usr/sbin/
+PATH=/usr/bin:/usr/sbin/:/bin:/sbin
 export PATH
 
 MYDATE=`date`
@@ -29,7 +29,7 @@ cp ../../debian/* debian/
 
 dpkg-buildpackage -S -us -uc
 
-cd build
+cd ..
 
 # checkout the OSB package
 osc co home:useidel unifictrl
