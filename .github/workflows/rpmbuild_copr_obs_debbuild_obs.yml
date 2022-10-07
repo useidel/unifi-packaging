@@ -1,7 +1,7 @@
 # This is workflow to build rpms using the SPEC file
 # The Copr build service is used
 
-name: rpmbuild_copr_obs
+name: rpmbuild_copr_obs_debbuild_obs
 
 # Controls when the workflow will run
 on:
@@ -16,8 +16,9 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains the job called "buildrpm" and "buildeb"
+  # we start with "buildrpm"
+  buildrpm:
     # The type of runner that the job will run on
     # Looks there are no or not many native fedora-runners, hence we use a container
     container: fedora:latest
@@ -77,4 +78,34 @@ jobs:
       # prepare and trigger OBS package build
       - name:  prepare and trigger OBS package build
         run: ./submitobsbuild.rpm.sh
+
+  # and now the 2nd job "builddeb"
+  builddeb:
+    # The type of runner that the job will run on
+    # Looks we cannot install software on the runner so we use a container
+    container: ubuntu:latest
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Install osc tools
+      - name: Install tooling for openbuild service and build DEB packes
+        run: apt update && apt -y install osc wget build-essential binutils lintian debhelper dh-make devscripts 
+
+      # setup OBS Authentication
+      # You need to store your OBS authenication data under
+      # Settings -> Actions -> Repository secrets
+      - name: Install API token for osb
+        env:
+          API_TOKEN_CONTENT: ${{ secrets.OBS_API_TOKEN }}
+        run: |
+           mkdir -p "$HOME/.config/osc"
+           echo "$API_TOKEN_CONTENT" > "$HOME/.config/osc/oscrc"
+
+      # prepare and trigger OBS package build
+      - name:  prepare and trigger OBS package build
+        run: ./submitobsbuild.deb.sh
 
