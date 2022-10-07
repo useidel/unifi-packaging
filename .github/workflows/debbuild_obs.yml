@@ -30,7 +30,7 @@ jobs:
 
       # Install osc tools
       - name: Install tooling for openbuild service and build DEB packes
-        run: apt update && apt -y install osc wget build-essential binutils lintian debhelper dh-make devscripts
+        run: apt update && apt -y install osc wget build-essential binutils lintian debhelper dh-make devscripts coreutils bash tar gzip
 
       # setup OBS Authentication
       # You need to store your OBS authenication data under
@@ -44,5 +44,5 @@ jobs:
 
       # prepare and trigger OBS package build
       - name:  prepare and trigger OBS package build
-        run: pwd && ls -al && bash -x submitobsbuild.deb.sh
+        run: ./submitobsbuild.deb.sh
 
