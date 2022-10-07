@@ -79,8 +79,13 @@ jobs:
       - name:  prepare and trigger OBS package build
         run: ./submitobsbuild.rpm.sh
 
-  # and now the 2nd job "builddeb"
+  # and now the 2nd job "builddeb" 
+  # it should not run in parallel which cause regression with OSB checkout and checking
+  # hence make this job depenend on "buildrpm" it will only run once that one was run
   builddeb:
+    # we want to run this even "buildrpm" was not successful
+    if: ${{ always() }}
+    needs: buildrpm
     # The type of runner that the job will run on
     # Looks we cannot install software on the runner so we use a container
     container: ubuntu:latest
