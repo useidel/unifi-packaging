@@ -44,5 +44,5 @@ jobs:
 
       # prepare and trigger OBS package build
       - name:  prepare and trigger OBS package build
-        run: ./submitobsbuild.deb.sh
+        run: ls -al && ./submitobsbuild.deb.sh
 
