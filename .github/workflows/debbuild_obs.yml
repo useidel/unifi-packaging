@@ -1,0 +1,48 @@
+# This is workflow to build DEB packages
+# The openbuild service is used
+
+name: debbuild_obs 
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    # Looks there are no native debian-runner, hence we use a container
+    container: debian:latest
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Install osc tools
+      - name: Install tooling for openbuild service and build DEB packes
+        run: apt install osc wget build-essential binutils lintian debhelper dh-make devscripts
+
+      # setup OBS Authentication
+      # You need to store your OBS authenication data under
+      # Settings -> Actions -> Repository secrets
+      - name: Install API token for osb
+        env:
+          API_TOKEN_CONTENT: ${{ secrets.OBS_API_TOKEN }}
+        run: |
+           mkdir -p "$HOME/.config/osc"
+           echo "$API_TOKEN_CONTENT" > "$HOME/.config/osc/oscrc"
+
+      # prepare and trigger OBS package build
+      - name:  prepare and trigger OBS package build
+        run: ./submitobsbuild.deb.sh
+

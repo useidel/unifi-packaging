@@ -5,8 +5,8 @@ export PATH
 
 MYDATE=`date`
 
-# Get the version from the SPEC file
-MYVER=`grep ^Version fedora-rpm/*.spec |awk '{print $2}'`
+# Get the version from the DEB changelog file
+MYVER=`head -1 deb/debian/changelog | cut -f2 -d"("|cut -f1 -d "-"`
 
 # Some variables for DEB package
 DEBFULLNAME="Udo Seidel"
