@@ -76,5 +76,5 @@ jobs:
 
       # prepare and trigger OBS package build
       - name:  prepare and trigger OBS package build
-        run: ./submitobsbuild.sh
+        run: ./submitobsbuild.rpm.sh
 
