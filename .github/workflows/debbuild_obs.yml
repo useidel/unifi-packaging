@@ -20,7 +20,7 @@ jobs:
   build:
     # The type of runner that the job will run on
     # Looks there are no native debian-runner, hence we use a container
-    container: debian:latest
+    container: ubuntu:latest
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
