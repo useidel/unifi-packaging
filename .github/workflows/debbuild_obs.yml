@@ -19,7 +19,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    # Looks there are no native debian-runner, hence we use a container
+    # Looks we cannot install software on the runner so we use a container
     container: ubuntu:latest
     runs-on: ubuntu-latest
 
@@ -44,5 +44,5 @@ jobs:
 
       # prepare and trigger OBS package build
       - name:  prepare and trigger OBS package build
-        run: bash -x submitobsbuild.deb.sh
+        run: ./submitobsbuild.deb.sh
 
