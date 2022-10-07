@@ -21,7 +21,7 @@ Source101:      PERMISSION-2.html
 Source102:      SETUP
 
 
-BuildRequires:  systemd coreutils
+BuildRequires:  systemd util-linux
 %{?systemd_requires}
 Requires(pre):  shadow-utils
 Requires:       firewalld-filesystem
