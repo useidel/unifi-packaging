@@ -1,6 +1,6 @@
 # unifi-packaging
 
-Some stuff needed to package the unifi server/controller for Linux. 
+Some stuff needed to package the [unifi server/controller](https://www.ui.com/download-software/) for Linux. 
 
 The source packages are here -> https://community.ui.com/releases/ 
 Search for the term "Unifi Network Application"
