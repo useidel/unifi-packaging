@@ -1,11 +1,3 @@
-unifi (7.2.95-1) unstable; urgency=medium
-
-  * Update to new version
-  * See: https://community.ui.com/releases/UniFi-Network-Application-7-2-95/7adebab5-8c41-4989-835d-ab60dba55255
-
- -- Udo Seidel <udoseidel@gmx.de>  Thu, 27 Oct 2022 15:52:21 +0200
-
-
 unifi (7.2.94-1) unstable; urgency=medium
 
   * Update to new version
