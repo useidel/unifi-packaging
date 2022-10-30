@@ -27,5 +27,5 @@ osc add UniFi*.unix.zip
 cd ..
 
 # upload changed content
-osc ci -m "Update from $MYDATE" unifictrl
+osc ci -m "$MY_GITHUB_COMMIT_MSG: $MYDATE" unifictrl
 
