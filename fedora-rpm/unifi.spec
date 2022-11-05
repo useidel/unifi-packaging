@@ -4,7 +4,7 @@
 %global __strip /bin/true
 
 Name:           unifi
-Version:        7.2.94
+Version:        7.2.95
 Release:        1%{?dist}
 Summary:        Ubiquiti UniFi controller
 
@@ -347,6 +347,9 @@ fi
 
 
 %changelog
+* Sun Nov 06 2022 Udo Seidel <udoseidel@gmx.de> - 7.2.95
+- Update to 7.2.95 see: https://community.ui.com/releases/UniFi-Network-Application-7-2-95/7adebab5-8c41-4989-835d-ab60dba55255
+
 * Tue Oct 04 2022 Udo Seidel <udoseidel@gmx.de> - 7.2.94
 - Big jump to 7.2.94 see: https://community.ui.com/releases/UniFi-Network-Application-7-2-94/2ab774d1-0f24-422e-accc-53b8200c10a7
 - added "BuildRequires: util-linux" to fix an issue using OBS to build F36 packages
