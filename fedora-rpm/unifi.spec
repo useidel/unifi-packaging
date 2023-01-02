@@ -4,7 +4,7 @@
 %global __strip /bin/true
 
 Name:           unifi
-Version:        7.2.95
+Version:        7.3.76
 Release:        1%{?dist}
 Summary:        Ubiquiti UniFi controller
 
@@ -347,6 +347,9 @@ fi
 
 
 %changelog
+* Mon Jan 02 2023 Udo Seidel <udoseidel@gmx.de> - 7.3.76
+- Update to 7.3.76 see: https://community.ui.com/releases/UniFi-Network-Application-7-3-76/85c75fc7-3e0f-4e99-aa90-7068af4f1141
+
 * Sun Nov 06 2022 Udo Seidel <udoseidel@gmx.de> - 7.2.95
 - Update to 7.2.95 see: https://community.ui.com/releases/UniFi-Network-Application-7-2-95/7adebab5-8c41-4989-835d-ab60dba55255
 
